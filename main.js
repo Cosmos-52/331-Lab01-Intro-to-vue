@@ -7,7 +7,8 @@ createApp({
         const image = ref('assets/images/socks_green.jpg')
         const onsale = ref(true)
         const inStock = ref(true)
-        const inventory = ref(0)
+        const inventory = ref(13)
+        const cart = ref(0)
         const description = ref('Description')
         const details = ref([
             '50% cotton',
@@ -15,14 +16,34 @@ createApp({
             '20% polyester'
         ])
         const variants = ref([
-            {id: 2234, color: 'green'},
-            {id: 2235, color: 'blue'}
+            {id: 2234, color: 'green', image: 'assets/images/socks_green.jpg'},
+            {id: 2235, color: 'blue', image: 'assets/images/socks_blue.jpg'}
         ])
         const sizes = ref([
             'S',
             'M',
             'L'
         ])
+
+        function addToCart() {
+            if (inventory.value > 0){
+                cart.value += 1
+                inventory.value -=1
+            }else{
+                cart.value = cart.value
+                inventory.value = inventory.value
+            }
+        }
+
+        function removeCart() {
+            cart.value -= 1
+            inventory.value += 1
+        }
+
+        function updateImage(variantImage) {
+            image.value = variantImage
+        }
+
 
         return {
             product, 
@@ -34,6 +55,10 @@ createApp({
             onsale,
             variants,
             sizes,
+            cart,
+            addToCart,
+            updateImage,
+            removeCart,
             description
         };
     }
