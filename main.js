@@ -7,7 +7,7 @@ createApp({
         const image = ref('assets/images/socks_green.jpg')
         const onsale = ref(true)
         const inStock = ref(true)
-        const inventory = ref(13)
+        const inventory = ref(3)
         const cart = ref(0)
         const description = ref('Description')
         const details = ref([
@@ -27,15 +27,17 @@ createApp({
 
         function addToCart() {
             if (inventory.value > 0){
+                inventory.value -= 1
                 cart.value += 1
-                inventory.value -=1
             }else{
+                inStock.value = false
                 cart.value = cart.value
                 inventory.value = inventory.value
             }
         }
 
         function removeCart() {
+            inStock.value = true
             cart.value -= 1
             inventory.value += 1
         }
