@@ -1,12 +1,11 @@
-const { createApp, ref} = Vue
+const { createApp, ref, computed} = Vue
 
 createApp({
     setup(){
         const product = ref('Boots')
+        const brand = ref('SE 331')
         const link = ref('https://www.camt.cmu.ac.th/index.php/en/')
-        const image = ref('assets/images/socks_green.jpg')
         const onsale = ref(true)
-        const inStock = ref(true)
         const inventory = ref(3)
         const cart = ref(0)
         const description = ref('Description')
@@ -16,14 +15,27 @@ createApp({
             '20% polyester'
         ])
         const variants = ref([
-            {id: 2234, color: 'green', image: 'assets/images/socks_green.jpg'},
-            {id: 2235, color: 'blue', image: 'assets/images/socks_blue.jpg'}
+            {id: 2234, color: 'green', image: 'assets/images/socks_green.jpg', quantity: 50},
+            {id: 2235, color: 'blue', image: 'assets/images/socks_blue.jpg', quantity: 0}
         ])
+        const selectedVariant = ref(0)
         const sizes = ref([
             'S',
             'M',
             'L'
         ])
+        const image = computed(() => {
+            return variants.value[selectedVariant.value].image
+        })
+        const inStock = computed(() => {
+            return variants.value[selectedVariant.value].quantity
+        })
+        const title = computed(() =>{
+            return brand.value + ' ' + product.value
+        })
+        const isOnSale = computed(() => {
+            return brand.value + ' ' + product.value + ' ' + 'is on sale'
+        })
 
         function addToCart() {
             if (inventory.value > 0){
@@ -46,9 +58,13 @@ createApp({
             image.value = variantImage
         }
 
+        function updateVariant(index) {
+            selectedVariant.value = index;
+        }
+
 
         return {
-            product, 
+            title,
             link,
             image,
             inStock,
@@ -60,7 +76,9 @@ createApp({
             cart,
             addToCart,
             updateImage,
+            isOnSale,
             removeCart,
+            updateVariant,
             description
         };
     }
