@@ -34,6 +34,9 @@ const productDisplay = {
 
         <button class="button" :disabled="!inStock" @click="addToCart" :class="{disabledButton: !inStock}">Add To Cart</button>            
         <button class="button" @click="removeCart">Remove Cart</button>
+
+        <review-list v-if="reviews.length" :reviews="reviews"></review-list>
+        <review-form @review-submitted="addReview"></review-form>
     </div>
     `,
 
@@ -83,6 +86,11 @@ const productDisplay = {
                 return 30
             }
         })
+
+        const reviews = ref([])
+        function addReview(review){
+            reviews.value.push(review)
+        }
         
         function addToCart() {
             if (variants.value[selectedVariant.value].quantity > 0){
@@ -121,7 +129,9 @@ const productDisplay = {
             removeCart,
             updateVariant,
             description,
-            shipping
+            shipping,
+            reviews,
+            addReview
         };
     }
 }
