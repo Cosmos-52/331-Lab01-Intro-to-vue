@@ -16,8 +16,8 @@ const productDisplay = {
         </a>
         <h2 v-if="onsale">{{isOnSale}}</h2>
         <h2 v-else>Not sale</h2>
-        <p v-if="inventory > 10">In Stock {{inventory}}</p>
-        <p v-else-if="inventory <= 10 && inventory > 0">Almost out of Stock {{inventory}}</p>
+        <p v-if="inStock > 10">In Stock {{inStock}}</p>
+        <p v-else-if="inStock <= 10 && inStock > 0">Almost out of Stock {{inStock}}</p>
         <p v-else>Out of Stock</p>
         <p>Shipping : {{shipping}}</p>
         <ul>
@@ -33,7 +33,7 @@ const productDisplay = {
         </ul>
 
         <button class="button" :disabled="!inStock" @click="addToCart" :class="{disabledButton: !inStock}">Add To Cart</button>            
-        <button v-if="cart > 0"  class="button" @click="removeCart">Remove Cart</button>
+        <button class="button" @click="removeCart">Remove Cart</button>
     </div>
     `,
 
@@ -41,13 +41,12 @@ const productDisplay = {
         premium: Boolean
     },
 
-    setup(props) {
+    setup(props, {emit}) {
         const product = ref('Boots')
         const brand = ref('SE 331')
         const link = ref('https://www.camt.cmu.ac.th/index.php/en/')
         const onsale = ref(true)
-        const inventory = ref(3)
-        const cart = ref(0)
+        const cart = ref([])
         const description = ref('Description')
         const details = ref([
             '50% cotton',
@@ -56,7 +55,7 @@ const productDisplay = {
         ])
         const variants = ref([
             {id: 2234, color: 'green', image: 'assets/images/socks_green.jpg', quantity: 50},
-            {id: 2235, color: 'blue', image: 'assets/images/socks_blue.jpg', quantity: 0}
+            {id: 2235, color: 'blue', image: 'assets/images/socks_blue.jpg', quantity: 20}
         ])
         const selectedVariant = ref(0)
         const sizes = ref([
@@ -86,20 +85,16 @@ const productDisplay = {
         })
         
         function addToCart() {
-            if (inventory.value > 0){
-                inventory.value -= 1
-                cart.value += 1
+            if (variants.value[selectedVariant.value].quantity > 0){
+                emit('add-to-cart', variants.value[selectedVariant.value].id)
             }else{
                 inStock.value = false
-                cart.value = cart.value
-                inventory.value = inventory.value
             }
         }
 
         function removeCart() {
             inStock.value = true
-            cart.value -= 1
-            inventory.value += 1
+            emit('remove-from-cart', variants.value[selectedVariant.value].id)
         }
 
         function updateImage(variantImage) {
@@ -115,7 +110,6 @@ const productDisplay = {
             link,
             image,
             inStock,
-            inventory,
             details,
             onsale,
             variants,

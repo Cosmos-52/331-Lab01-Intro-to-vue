@@ -13,15 +13,16 @@
 <body>
     <div id="app">
         <div class="nav-bar"></div>
-        <div class="cart">Cart {{cart}}</div>
+        <div class="cart">Id:{{cart[0]}} Cart:{{cart[2]}}   |    Id:{{cart[1]}} Cart:{{cart[3]}} </div>
 
-        <product-display :premium="premium"></product-display>
+        <product-display :premium="premium" @add-to-cart="updateCart" @remove-from-cart="removeCart"></product-display>
         
         <h1>{{description}}</h1>
     </div>
 
     <!-- Import Js -->
     <script src="./components/ProductDisplay.js"></script>
+    <script src="./components/ProductDetails.js"></script>
     <script src="./main.js"></script>
 </body>
 
